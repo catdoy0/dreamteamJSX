@@ -2,6 +2,7 @@ import { Navigate } from "react-router";
 import { useAuth } from "../context/AuthContext";
 import type { ReactNode } from "react";
 import { ROUTES } from "../routes";
+import LoadingScreen from "./common/LoadingScreen";
 
 /**
  */
@@ -9,6 +10,9 @@ export default function PublicRoute({ children }: { children: ReactNode }) {
   const { session, loading } = useAuth();
 
 
-  if (!session || loading) return <>{children}</>
-  if (session) return <Navigate to={ROUTES.ROOT} replace />;
+  if (loading) return <LoadingScreen/>
+
+  if (!session) return <>{children}</>
+  else if (session.user.role !== 'MEMBER') return <Navigate to={ROUTES.ADMIN_DASHBOARD} replace />;
+  else return <>{children}</>
 }

@@ -33,9 +33,7 @@ function App() {
         }/>
 
         <Route path={ROUTES.CHOOSE_FORM} element={
-          <PublicRoute>
             <ChooseForm/>
-          </PublicRoute>
         }/>
 
         <Route path={ROUTES.CREATE_FORM} element={<CreateForm/>}/>

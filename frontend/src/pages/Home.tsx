@@ -1,20 +1,31 @@
 import { Navigate } from "react-router";
-import LoadingScreen from "../components/common/LoadingScreen";
-import { useAuth } from "../context/AuthContext"
+import { useAuth } from "../context/AuthContext";
 import { ROUTES } from "../routes";
 
+const ADMIN_ROLES = [
+  "SUPER_ADMIN",
+  "DEPARTMENT_HEAD",
+  "DEPUTY",
+  "TEAM_LEADER",
+];
+
 /**
- * Page to check user's session and navigate them according to their current session
- **/
+ * Redirects users based on their authentication status and role.
+ */
 export default function Home() {
   const { session, loading } = useAuth();
 
-  if (loading) return <LoadingScreen/>;
-  if (!session) return <Navigate to={ROUTES.LOGIN} replace/>;
+  if (loading) return
 
-  const role = session.user?.role;
-  if (role === 'DEPARTMENT_HEAD' || role === 'DEPUTY' || role === 'TEAM_LEADER') { return <Navigate to={ROUTES.ADMIN_DASHBOARD} replace/>; }
-  if (role === 'MEMBER') { return <Navigate to={ROUTES.CHOOSE_FORM} replace/>; }
+  if (!session) {
+    return <Navigate to={ROUTES.LOGIN} replace />;
+  }
 
-  return <Navigate to={ROUTES.CHOOSE_FORM} replace/>;
+  const { role } = session.user;
+
+  if (ADMIN_ROLES.includes(role)) {
+    return <Navigate to={ROUTES.ADMIN_DASHBOARD} replace />;
+  }
+
+  return <Navigate to={ROUTES.CHOOSE_FORM} replace />;
 }
